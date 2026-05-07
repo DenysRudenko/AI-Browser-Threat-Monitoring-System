@@ -1,0 +1,29 @@
+# Secrets and tokens
+*.env
+*token*
+*secret*
+*password*
+*.key
+*.pem
+
+# Logs and raw telemetry
+*.log
+*.evtx
+*.json
+eve.json
+splunk_logs/
+raw_logs/
+
+# Malware / test files
+eicar.com
+*.com
+*.exe
+*.dll
+*.bin
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Word temporary files
+~$*.docx
