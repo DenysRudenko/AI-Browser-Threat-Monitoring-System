@@ -1,0 +1,144 @@
+/* SOC demo page additions */
+
+.soc-demo-page {
+  margin-top: 32px;
+}
+
+.demo-card {
+  background: #fbfdff;
+  border: 1px solid #dce6f3;
+  border-radius: 18px;
+  padding: 22px;
+  min-height: 240px;
+  display: flex;
+  flex-direction: column;
+}
+
+.demo-card h3 {
+  font-size: 21px;
+  margin-bottom: 10px;
+  color: #0c2d57;
+}
+
+.demo-card p {
+  color: var(--muted);
+  margin-bottom: 18px;
+}
+
+.demo-card .button {
+  margin-top: auto;
+  width: fit-content;
+}
+
+.workflow-comparison {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin: 22px 0;
+}
+
+.comparison-panel {
+  min-height: 315px;
+}
+
+.comparison-label {
+  display: inline-block;
+  background: #e8f1ff;
+  color: #0050c8;
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 900;
+  margin-bottom: 14px;
+}
+
+.step-list {
+  margin-left: 20px;
+  color: #243b5f;
+}
+
+.step-list li {
+  margin: 12px 0;
+}
+
+.table-wrap {
+  overflow-x: auto;
+  border: 1px solid #dce6f3;
+  border-radius: 14px;
+}
+
+.evidence-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  min-width: 720px;
+}
+
+.evidence-table th,
+.evidence-table td {
+  border-bottom: 1px solid #dce6f3;
+  border-right: 1px solid #dce6f3;
+  padding: 14px;
+  text-align: left;
+  vertical-align: top;
+}
+
+.evidence-table th:last-child,
+.evidence-table td:last-child {
+  border-right: none;
+}
+
+.evidence-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.evidence-table th {
+  background: #f3f8ff;
+  color: #0c2d57;
+  font-weight: 900;
+}
+
+.prompt-box {
+  background: #f8fbff;
+  border: 1px solid #dce6f3;
+  border-radius: 14px;
+  padding: 14px;
+  margin: 12px 0;
+}
+
+.prompt-box strong {
+  color: #0c2d57;
+}
+
+.prompt-box p {
+  margin-top: 8px;
+  color: #243b5f;
+}
+
+@media (max-width: 1050px) {
+  .workflow-comparison {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .soc-demo-page {
+    margin-top: 22px;
+  }
+
+  .demo-card {
+    min-height: auto;
+  }
+
+  .demo-card .button {
+    width: 100%;
+  }
+
+  .comparison-panel {
+    min-height: auto;
+  }
+
+  .step-list {
+    margin-left: 18px;
+  }
+}

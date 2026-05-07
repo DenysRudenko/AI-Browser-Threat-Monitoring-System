@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SkyBridge Airways - Demo Inbox</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="lab-banner">
+    Controlled SOC lab website for AI Browser Threat Monitoring System. Use fake data only. No real booking or payment is processed.
+  </div>
+  <header>
+    <a class="logo" href="index.html" aria-label="SkyBridge Airways home">
+      <span class="logo-icon" aria-hidden="true">✈</span>
+      SkyBridge Airways
+    </a>
+    <nav aria-label="Primary navigation">
+      <a href="index.html">Home</a>
+      <a href="flights.html">Flights</a>
+      <a href="ticket.html">Book</a>
+      <a href="inbox.html">Demo Inbox</a>
+      <a href="soc-demo.html">SOC Demo</a>
+      <a href="confirmation.html">Verification</a>
+    </nav>
+    <div class="sign-in">Demo Only</div>
+  </header>
+
+  <section class="hero compact">
+    <h1>Demo internal inbox</h1>
+    <p>Controlled fake inbox for testing a message-to-browser workflow. This is not connected to real email.</p>
+    <div class="plane">🛫</div>
+  </section>
+
+  <main class="container email-layout">
+    <aside class="mail-sidebar">
+      <h3>SkyBridge Demo Mail</h3>
+      <div class="mail-folder">Inbox</div>
+      <div class="mail-folder">Travel alerts</div>
+      <div class="mail-folder">Archived</div>
+      <div class="mail-folder">Lab notes</div>
+    </aside>
+
+    <section>
+      <div class="message-list">
+        <a class="message-row" href="email-booking-alert.html">
+          <div class="message-meta">From: SkyBridge Airways Demo &lt;demo@skybridge.local&gt; · Today 09:14</div>
+          <div class="message-subject">Action required: review demo booking verification</div>
+          <p>This controlled message links to the SkyBridge booking verification workflow for SOC monitoring tests.</p>
+        </a>
+
+        <a class="message-row" href="flights.html">
+          <div class="message-meta">From: Travel Desk Demo &lt;travel@skybridge.local&gt; · Yesterday 16:20</div>
+          <div class="message-subject">Dublin to Paris flight options are available</div>
+          <p>Review the available demo flights and continue to the controlled booking page.</p>
+        </a>
+      </div>
+
+      <div class="notice-box">
+        <strong>Lab notice:</strong> This page is a fake inbox. It does not receive or send email, collect credentials, or represent a real provider.
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div>
+      <strong>SkyBridge Airways</strong><br>
+      Controlled demo environment for AI Browser Threat Monitoring System.
+    </div>
+    <div>
+      Internal lab target: 192.168.56.30
+    </div>
+  </footer>
+  <script src="js/main.js"></script>
+
+</body>
+</html>

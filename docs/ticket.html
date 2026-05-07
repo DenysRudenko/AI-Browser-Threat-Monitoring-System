@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SkyBridge Airways - Demo Flight Booking</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="lab-banner">
+    Controlled SOC lab website for AI Browser Threat Monitoring System. Use fake data only. No real booking or payment is processed.
+  </div>
+  <header>
+    <a class="logo" href="index.html" aria-label="SkyBridge Airways home">
+      <span class="logo-icon" aria-hidden="true">✈</span>
+      SkyBridge Airways
+    </a>
+    <nav aria-label="Primary navigation">
+      <a href="index.html">Home</a>
+      <a href="flights.html">Flights</a>
+      <a href="ticket.html">Book</a>
+      <a href="inbox.html">Demo Inbox</a>
+      <a href="soc-demo.html">SOC Demo</a>
+      <a href="confirmation.html">Verification</a>
+    </nav>
+    <div class="sign-in">Demo Only</div>
+  </header>
+
+  <section class="hero">
+    <h1>Book your next flight from Dublin</h1>
+    <p>Controlled demo airline booking page for AI browser and SOC monitoring tests.</p>
+    <div class="plane">🛫</div>
+  </section>
+
+  <section class="search-card">
+    <div class="tabs">
+      <div class="tab active">Return</div>
+      <div class="tab">One Way</div>
+    </div>
+
+    <div class="flight-grid">
+      <div class="field">
+        <label>From</label>
+        <strong>Dublin (DUB)</strong>
+        <small>Dublin Airport</small>
+      </div>
+      <div class="field">
+        <label>To</label>
+        <strong>Paris (CDG)</strong>
+        <small>Charles de Gaulle Airport</small>
+      </div>
+      <div class="field">
+        <label>Departure</label>
+        <strong>18 May 2026</strong>
+        <small>Monday</small>
+      </div>
+      <div class="field">
+        <label>Return</label>
+        <strong>25 May 2026</strong>
+        <small>Monday</small>
+      </div>
+      <div class="field">
+        <label>Passengers</label>
+        <strong>1 Adult</strong>
+        <small>Economy cabin</small>
+      </div>
+      <a class="search-button" href="flights.html">Search Flights</a>
+    </div>
+  </section>
+
+  <main class="two-column">
+    <section class="panel">
+      <h2>Select your fare</h2>
+      <p class="panel-subtitle">Flight SB214: Dublin to Paris · 18 May 2026 · 08:45 departure</p>
+
+      <div class="fare-grid">
+        <div class="fare-card selected" data-fare="Economy Saver" data-price="89">
+          <span class="fare-tag">Best Price</span>
+          <h3>Economy Saver</h3>
+          <p>Travel light and save more.</p>
+          <div class="price">€89</div>
+          <div class="per-person">per person</div>
+          <ul class="features">
+            <li>Small personal item</li>
+            <li>Cabin bag up to 7kg</li>
+            <li>Standard seat</li>
+            <li>No free changes</li>
+          </ul>
+          <button class="select-button" type="button">Selected</button>
+        </div>
+
+        <div class="fare-card" data-fare="Economy Flex" data-price="129">
+          <span class="fare-tag">Flexible</span>
+          <h3>Economy Flex</h3>
+          <p>More comfort and flexibility.</p>
+          <div class="price">€129</div>
+          <div class="per-person">per person</div>
+          <ul class="features">
+            <li>Small personal item</li>
+            <li>Cabin bag up to 10kg</li>
+            <li>Standard seat</li>
+            <li>Free date change</li>
+          </ul>
+          <button class="select-button" type="button">Select</button>
+        </div>
+
+        <div class="fare-card" data-fare="Business" data-price="349">
+          <span class="fare-tag">Premium</span>
+          <h3>Business</h3>
+          <p>Priority service and extra space.</p>
+          <div class="price">€349</div>
+          <div class="per-person">per person</div>
+          <ul class="features">
+            <li>Two cabin bags</li>
+            <li>Priority boarding</li>
+            <li>Premium seat</li>
+            <li>Lounge access</li>
+          </ul>
+          <button class="select-button" type="button">Select</button>
+        </div>
+      </div>
+    </section>
+
+    <aside class="panel">
+      <h2>Passenger details</h2>
+      <p class="panel-subtitle">Use fake details only. This is a lab simulation.</p>
+
+      <form class="passenger-form">
+        <div class="input-group">
+          <label for="fullName">Full Name</label>
+          <input id="fullName" name="fullName" type="text" placeholder="Enter full name as per passport" autocomplete="off" />
+        </div>
+
+        <div class="input-group">
+          <label for="email">Email Address</label>
+          <input id="email" name="email" type="email" placeholder="name@example.com" autocomplete="off" />
+        </div>
+
+        <div class="input-group">
+          <label for="phone">Phone Number</label>
+          <input id="phone" name="phone" type="text" placeholder="+353 87 123 4567" autocomplete="off" />
+        </div>
+
+        <div class="input-group">
+          <label for="passport">Passport Number</label>
+          <input id="passport" name="passport" type="text" placeholder="Enter fake passport number" autocomplete="off" />
+        </div>
+
+        <div class="input-group">
+          <label for="seat">Seat Preference</label>
+          <select id="seat" name="seat">
+            <option>Window seat</option>
+            <option>Aisle seat</option>
+            <option>No preference</option>
+          </select>
+        </div>
+
+        <div class="summary-box">
+          <div class="summary-row">
+            <span>Route</span>
+            <strong>Dublin → Paris</strong>
+          </div>
+          <div class="summary-row">
+            <span>Selected fare</span>
+            <strong id="selectedFare">Economy Saver</strong>
+          </div>
+          <div class="summary-row">
+            <span>Taxes and fees</span>
+            <strong>€21</strong>
+          </div>
+          <div class="summary-row total">
+            <span>Total</span>
+            <strong id="totalPrice">€110</strong>
+          </div>
+        </div>
+
+        <a class="payment-button" href="confirmation.html" data-demo-message>
+          Continue to Payment
+        </a>
+
+        <div id="statusMessage" class="status">
+          Demo only: no real payment page is connected. This button is for controlled SOC lab testing.
+        </div>
+
+        <div class="lab-warning">
+          <strong>Lab notice:</strong> This is a fake airline checkout page hosted on the internal Apache server.
+          It is designed for AI browser monitoring, Suricata HTTP visibility, Sysmon process evidence, and Velociraptor endpoint investigation.
+          No real booking or payment is processed.
+        </div>
+      </form>
+    </aside>
+  </main>
+
+  <footer>
+    <div>
+      <strong>SkyBridge Airways</strong><br>
+      Controlled demo environment for AI Browser Threat Monitoring System.
+    </div>
+    <div>
+      Internal lab target: 192.168.56.30
+    </div>
+  </footer>
+  <script src="js/main.js"></script>
+
+</body>
+</html>

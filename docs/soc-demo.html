@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SkyBridge Airways - SOC Demo Interface</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/css-additions-for-style.css" />
+</head>
+<body>
+  <div class="lab-banner">
+    Controlled SOC lab website for AI Browser Threat Monitoring System. Use fake data only. No real booking or payment is processed.
+  </div>
+
+  <header>
+    <a class="logo" href="index.html" aria-label="SkyBridge Airways home">
+      <span class="logo-icon" aria-hidden="true">✈</span>
+      SkyBridge Airways
+    </a>
+
+    <nav aria-label="Primary navigation">
+      <a href="index.html">Home</a>
+      <a href="flights.html">Flights</a>
+      <a href="ticket.html">Book</a>
+      <a href="inbox.html">Demo Inbox</a>
+      <a href="soc-demo.html">SOC Demo</a>
+      <a href="confirmation.html">Verification</a>
+    </nav>
+
+    <div class="sign-in">Demo Only</div>
+  </header>
+
+  <section class="hero compact">
+    <h1>SkyBridge SOC Demo Interface</h1>
+    <p>Controlled AI browser workflows and expected SOC evidence for the AI Browser Threat Monitoring System.</p>
+    <div class="plane">🛫</div>
+  </section>
+
+  <main class="container soc-demo-page">
+    <section class="panel">
+      <h2>Demonstration overview</h2>
+      <p class="panel-subtitle">
+        This page summarises the controlled use cases used in the lab. It does not perform an attack.
+        Its purpose is to show how browser activity can be linked to endpoint, network and process evidence.
+      </p>
+
+      <div class="grid-3">
+        <article class="demo-card">
+          <span class="badge">UC1</span>
+          <h3>Booking form completion</h3>
+          <p>Comet AI Browser is used to select a fare, fill fake passenger details and reach the controlled payment step.</p>
+          <a class="button" href="ticket.html">Open Booking Form</a>
+        </article>
+
+        <article class="demo-card">
+          <span class="badge">UC2</span>
+          <h3>Multi-page navigation</h3>
+          <p>Comet moves through the controlled website from homepage to flight results and then to the booking form.</p>
+          <a class="button" href="flights.html">Start Navigation Flow</a>
+        </article>
+
+        <article class="demo-card">
+          <span class="badge">UC3</span>
+          <h3>Controlled email action flow</h3>
+          <p>A controlled demo inbox message links into the SkyBridge booking workflow using safe test content only.</p>
+          <a class="button" href="inbox.html">Open Demo Inbox</a>
+        </article>
+      </div>
+    </section>
+
+    <section class="workflow-comparison">
+      <article class="panel comparison-panel">
+        <span class="comparison-label">Expected workflow</span>
+        <h2>Manual browser path</h2>
+        <ol class="step-list">
+          <li>User opens the SkyBridge homepage.</li>
+          <li>User views the Dublin to Paris flight results.</li>
+          <li>User selects the Economy Saver option.</li>
+          <li>User enters fake passenger details.</li>
+          <li>User clicks Continue to Payment.</li>
+        </ol>
+      </article>
+
+      <article class="panel comparison-panel">
+        <span class="comparison-label">AI-assisted workflow</span>
+        <h2>Comet browser path</h2>
+        <ol class="step-list">
+          <li>Comet reads the controlled page content.</li>
+          <li>Comet follows navigation links across the site.</li>
+          <li>Comet selects the requested flight option.</li>
+          <li>Comet fills the form using fake test details.</li>
+          <li>Comet reaches the controlled verification step.</li>
+        </ol>
+      </article>
+
+      <article class="panel comparison-panel">
+        <span class="comparison-label">SOC visibility</span>
+        <h2>Evidence expected</h2>
+        <ol class="step-list">
+          <li>Sysmon records browser and process activity.</li>
+          <li>Suricata records HTTP requests to SkyBridge pages.</li>
+          <li>Velociraptor validates endpoint process evidence.</li>
+          <li>Splunk indexes the events by sourcetype.</li>
+          <li>T1-T6 searches support the investigation timeline.</li>
+        </ol>
+      </article>
+    </section>
+
+    <section class="panel">
+      <h2>Expected evidence matrix</h2>
+      <p class="panel-subtitle">
+        The table below shows what each telemetry source is expected to contribute during the controlled demonstration.
+      </p>
+
+      <div class="table-wrap">
+        <table class="evidence-table">
+          <thead>
+            <tr>
+              <th>Evidence source</th>
+              <th>Expected evidence</th>
+              <th>Related search/report</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Sysmon</td>
+              <td>Browser process activity, process timestamps and command-line data where available</td>
+              <td>T1, T5</td>
+            </tr>
+            <tr>
+              <td>Suricata</td>
+              <td>HTTP paths such as /index.html, /flights.html, /ticket.html, /inbox.html and /confirmation.html</td>
+              <td>T2</td>
+            </tr>
+            <tr>
+              <td>Velociraptor pslist</td>
+              <td>Running process evidence from the Windows endpoint</td>
+              <td>T3</td>
+            </tr>
+            <tr>
+              <td>Velociraptor pstree</td>
+              <td>Parent-child process context and additional endpoint process validation</td>
+              <td>T4</td>
+            </tr>
+            <tr>
+              <td>Splunk</td>
+              <td>Combined event timeline using endpoint, network and process evidence</td>
+              <td>T6</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="grid-2">
+      <article class="panel">
+        <h2>Suggested AI browser prompts</h2>
+        <p class="panel-subtitle">These prompts use fake data only and are intended for controlled lab testing.</p>
+
+        <div class="prompt-box">
+          <strong>UC1 Booking form completion</strong>
+          <p>Open the SkyBridge Airways booking page, select the Economy Saver fare, fill the form using fake test details, and continue to the payment step.</p>
+        </div>
+
+        <div class="prompt-box">
+          <strong>UC2 Multi-page navigation</strong>
+          <p>Start from the SkyBridge Airways homepage, find the Dublin to Paris flight results, choose the Economy Saver option, and open the booking form.</p>
+        </div>
+
+        <div class="prompt-box">
+          <strong>UC3 Controlled email action flow</strong>
+          <p>Open the demo inbox, read the SkyBridge booking verification message, and follow the link to the booking page using fake test details only.</p>
+        </div>
+      </article>
+
+      <article class="panel">
+        <h2>Lab safety notice</h2>
+        <p>
+          This website is a controlled internal lab target. It does not process real bookings,
+          payments, credentials or personal data.
+        </p>
+        <p>
+          The EICAR test file is used only as a harmless antivirus test file inside the lab.
+          The real EICAR file is not included in the GitHub repository.
+        </p>
+        <p>
+          This demo page is designed to organise safe test scenarios and expected SOC evidence.
+          It does not contain hidden malicious prompts, credential collection, or real phishing functionality.
+        </p>
+
+        <div class="notice-box">
+          <strong>Demonstration purpose:</strong> show how controlled AI-assisted browser workflows can be reviewed through Sysmon, Suricata, Velociraptor and Splunk evidence.
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <footer>
+    <div>
+      <strong>SkyBridge Airways</strong><br>
+      Controlled demo environment for AI Browser Threat Monitoring System.
+    </div>
+    <div>
+      Internal lab target: 192.168.56.30
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
