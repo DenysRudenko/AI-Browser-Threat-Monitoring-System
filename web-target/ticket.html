@@ -4,461 +4,25 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SkyBridge Airways - Demo Flight Booking</title>
-
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: Arial, Helvetica, sans-serif;
-    }
-
-    body {
-      background: #f4f7fb;
-      color: #10233f;
-    }
-
-    header {
-      background: #ffffff;
-      height: 72px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 48px;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-      position: sticky;
-      top: 0;
-      z-index: 10;
-    }
-
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-size: 26px;
-      font-weight: 800;
-      color: #064e9b;
-    }
-
-    .logo-icon {
-      background: linear-gradient(135deg, #0066ff, #00a6ff);
-      color: white;
-      padding: 8px 11px;
-      border-radius: 14px;
-      font-size: 22px;
-    }
-
-    nav {
-      display: flex;
-      gap: 28px;
-      font-size: 15px;
-      color: #1d3557;
-    }
-
-    nav span {
-      cursor: default;
-    }
-
-    .sign-in {
-      border: 1px solid #d4dce8;
-      padding: 9px 16px;
-      border-radius: 999px;
-      font-weight: 600;
-      background: #fff;
-    }
-
-    .hero {
-      min-height: 300px;
-      background:
-        linear-gradient(90deg, rgba(3, 34, 82, 0.88), rgba(0, 89, 180, 0.35)),
-        linear-gradient(135deg, #7ec8ff, #eaf6ff 50%, #ffe5c4);
-      color: white;
-      padding: 58px 70px 130px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .hero h1 {
-      font-size: 46px;
-      line-height: 1.1;
-      max-width: 560px;
-      margin-bottom: 16px;
-    }
-
-    .hero p {
-      font-size: 19px;
-      max-width: 520px;
-      opacity: 0.95;
-    }
-
-    .plane {
-      position: absolute;
-      right: 90px;
-      top: 74px;
-      font-size: 105px;
-      transform: rotate(-8deg);
-      opacity: 0.95;
-    }
-
-    .search-card {
-      max-width: 1220px;
-      margin: -82px auto 28px;
-      background: white;
-      border-radius: 22px;
-      box-shadow: 0 18px 45px rgba(13, 42, 83, 0.18);
-      padding: 28px;
-      position: relative;
-      z-index: 2;
-    }
-
-    .tabs {
-      display: flex;
-      gap: 12px;
-      margin-bottom: 24px;
-    }
-
-    .tab {
-      border: 1px solid #c9d5e7;
-      padding: 12px 24px;
-      border-radius: 12px;
-      font-weight: 700;
-      color: #113c73;
-      background: #f9fbff;
-    }
-
-    .tab.active {
-      background: #005bea;
-      color: white;
-      border-color: #005bea;
-    }
-
-    .flight-grid {
-      display: grid;
-      grid-template-columns: 1.1fr 1.1fr 1fr 1fr 0.9fr 0.9fr;
-      gap: 14px;
-      align-items: end;
-    }
-
-    .field {
-      border: 1px solid #d8e1ee;
-      border-radius: 14px;
-      padding: 14px 15px;
-      background: #fff;
-      min-height: 76px;
-    }
-
-    .field label {
-      display: block;
-      font-size: 12px;
-      color: #66738a;
-      margin-bottom: 8px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.03em;
-    }
-
-    .field strong {
-      display: block;
-      font-size: 17px;
-      color: #10233f;
-      margin-bottom: 3px;
-    }
-
-    .field small {
-      color: #66738a;
-    }
-
-    .search-button {
-      height: 76px;
-      border: none;
-      background: linear-gradient(135deg, #005bea, #0043b7);
-      color: white;
-      font-size: 16px;
-      font-weight: 800;
-      border-radius: 14px;
-      cursor: pointer;
-      box-shadow: 0 10px 20px rgba(0, 91, 234, 0.25);
-    }
-
-    main {
-      max-width: 1220px;
-      margin: 0 auto 42px;
-      display: grid;
-      grid-template-columns: 1.55fr 0.9fr;
-      gap: 28px;
-    }
-
-    .panel {
-      background: white;
-      border-radius: 22px;
-      box-shadow: 0 12px 30px rgba(13, 42, 83, 0.09);
-      padding: 28px;
-      border: 1px solid #e4ebf5;
-    }
-
-    .panel h2 {
-      font-size: 24px;
-      margin-bottom: 8px;
-      color: #0c2d57;
-    }
-
-    .panel-subtitle {
-      color: #60708a;
-      margin-bottom: 22px;
-      font-size: 15px;
-    }
-
-    .fare-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 18px;
-    }
-
-    .fare-card {
-      border: 2px solid #dce6f3;
-      border-radius: 18px;
-      padding: 22px;
-      background: #fbfdff;
-      transition: 0.2s;
-      min-height: 300px;
-      position: relative;
-    }
-
-    .fare-card:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 12px 26px rgba(13, 42, 83, 0.12);
-    }
-
-    .fare-card.selected {
-      border-color: #0066ff;
-      background: #f3f8ff;
-    }
-
-    .fare-tag {
-      display: inline-block;
-      padding: 6px 12px;
-      border-radius: 999px;
-      background: #e8f1ff;
-      color: #0050c8;
-      font-size: 12px;
-      font-weight: 800;
-      margin-bottom: 16px;
-    }
-
-    .fare-card h3 {
-      font-size: 21px;
-      margin-bottom: 6px;
-    }
-
-    .price {
-      font-size: 34px;
-      font-weight: 900;
-      color: #005bea;
-      margin: 16px 0 4px;
-    }
-
-    .per-person {
-      color: #66738a;
-      font-size: 13px;
-      margin-bottom: 18px;
-    }
-
-    .features {
-      list-style: none;
-      margin-top: 18px;
-      margin-bottom: 22px;
-    }
-
-    .features li {
-      margin: 10px 0;
-      color: #2d3f5f;
-      font-size: 14px;
-    }
-
-    .features li::before {
-      content: "✓";
-      color: #00a86b;
-      font-weight: 900;
-      margin-right: 8px;
-    }
-
-    .select-button {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid #0066ff;
-      border-radius: 12px;
-      background: white;
-      color: #005bea;
-      font-weight: 800;
-      cursor: pointer;
-      margin-top: auto;
-    }
-
-    .fare-card.selected .select-button {
-      background: #005bea;
-      color: white;
-    }
-
-    .passenger-form {
-      display: grid;
-      gap: 15px;
-    }
-
-    .input-group label {
-      display: block;
-      font-size: 13px;
-      color: #243b5f;
-      margin-bottom: 7px;
-      font-weight: 800;
-    }
-
-    .input-group input,
-    .input-group select {
-      width: 100%;
-      padding: 14px 14px;
-      border: 1px solid #d4dce8;
-      border-radius: 12px;
-      font-size: 15px;
-      outline: none;
-    }
-
-    .input-group input:focus,
-    .input-group select:focus {
-      border-color: #005bea;
-      box-shadow: 0 0 0 3px rgba(0,91,234,0.12);
-    }
-
-    .summary-box {
-      background: #f3f8ff;
-      border: 1px solid #d5e6ff;
-      padding: 18px;
-      border-radius: 16px;
-      margin-top: 12px;
-    }
-
-    .summary-row {
-      display: flex;
-      justify-content: space-between;
-      margin: 8px 0;
-      color: #243b5f;
-      font-size: 14px;
-    }
-
-    .summary-row.total {
-      border-top: 1px solid #cbdcf5;
-      padding-top: 12px;
-      margin-top: 12px;
-      font-size: 18px;
-      font-weight: 900;
-      color: #0c2d57;
-    }
-
-    .payment-button {
-      margin-top: 18px;
-      width: 100%;
-      padding: 17px;
-      border: none;
-      border-radius: 14px;
-      background: linear-gradient(135deg, #005bea, #003d9c);
-      color: white;
-      font-size: 17px;
-      font-weight: 900;
-      cursor: pointer;
-    }
-
-    .lab-warning {
-      margin-top: 18px;
-      background: #fff8e6;
-      color: #604100;
-      border: 1px solid #ffe0a3;
-      padding: 14px;
-      border-radius: 14px;
-      font-size: 14px;
-      line-height: 1.45;
-    }
-
-    footer {
-      background: #06274d;
-      color: white;
-      padding: 28px 70px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 14px;
-    }
-
-    .status {
-      margin-top: 14px;
-      padding: 12px;
-      background: #ecfff6;
-      border: 1px solid #b8f0d2;
-      color: #006b42;
-      border-radius: 12px;
-      display: none;
-      font-weight: 700;
-    }
-    
-    .payment-button {
-  margin-top: 18px;
-  width: 100%;
-  padding: 17px;
-  border: none;
-  border-radius: 14px;
-  background: linear-gradient(135deg, #005bea, #003d9c);
-  color: white;
-  font-size: 17px;
-  font-weight: 900;
-  cursor: pointer;
-  display: block;
-  text-align: center;
-  text-decoration: none;
-}
-
-    @media (max-width: 1050px) {
-      .flight-grid,
-      main,
-      .fare-grid {
-        grid-template-columns: 1fr;
-      }
-
-      header {
-        padding: 0 20px;
-      }
-
-      nav {
-        display: none;
-      }
-
-      .hero {
-        padding: 42px 28px 110px;
-      }
-
-      .plane {
-        display: none;
-      }
-    }
-    
-
-
-  </style>
+  <link rel="stylesheet" href="css/style.css" />
 </head>
-
 <body>
+  <div class="lab-banner">
+    Controlled SOC lab website for AI Browser Threat Monitoring System. Use fake data only. No real booking or payment is processed.
+  </div>
   <header>
-    <div class="logo">
-      <div class="logo-icon">✈</div>
+    <a class="logo" href="index.html" aria-label="SkyBridge Airways home">
+      <span class="logo-icon" aria-hidden="true">✈</span>
       SkyBridge Airways
-    </div>
-
-    <nav>
-      <span>Book</span>
-      <span>Manage Trips</span>
-      <span>Check-In</span>
-      <span>Flight Status</span>
-      <span>Travel Info</span>
+    </a>
+    <nav aria-label="Primary navigation">
+      <a href="index.html">Home</a>
+      <a href="flights.html">Flights</a>
+      <a href="ticket.html">Book</a>
+      <a href="inbox.html">Demo Inbox</a>
+      <a href="confirmation.html">Verification</a>
     </nav>
-
-    <div class="sign-in">Sign In</div>
+    <div class="sign-in">Demo Only</div>
   </header>
 
   <section class="hero">
@@ -479,36 +43,31 @@
         <strong>Dublin (DUB)</strong>
         <small>Dublin Airport</small>
       </div>
-
       <div class="field">
         <label>To</label>
         <strong>Paris (CDG)</strong>
         <small>Charles de Gaulle Airport</small>
       </div>
-
       <div class="field">
         <label>Departure</label>
         <strong>18 May 2026</strong>
         <small>Monday</small>
       </div>
-
       <div class="field">
         <label>Return</label>
         <strong>25 May 2026</strong>
         <small>Monday</small>
       </div>
-
       <div class="field">
         <label>Passengers</label>
         <strong>1 Adult</strong>
         <small>Economy cabin</small>
       </div>
-
-      <button class="search-button" type="button">Search Flights</button>
+      <a class="search-button" href="flights.html">Search Flights</a>
     </div>
   </section>
 
-  <main>
+  <main class="two-column">
     <section class="panel">
       <h2>Select your fare</h2>
       <p class="panel-subtitle">Flight SB214: Dublin to Paris · 18 May 2026 · 08:45 departure</p>
@@ -568,22 +127,22 @@
       <form class="passenger-form">
         <div class="input-group">
           <label for="fullName">Full Name</label>
-          <input id="fullName" name="fullName" type="text" placeholder="Enter full name as per passport" />
+          <input id="fullName" name="fullName" type="text" placeholder="Enter full name as per passport" autocomplete="off" />
         </div>
 
         <div class="input-group">
           <label for="email">Email Address</label>
-          <input id="email" name="email" type="email" placeholder="name@example.com" />
+          <input id="email" name="email" type="email" placeholder="name@example.com" autocomplete="off" />
         </div>
 
         <div class="input-group">
           <label for="phone">Phone Number</label>
-          <input id="phone" name="phone" type="text" placeholder="+353 87 123 4567" />
+          <input id="phone" name="phone" type="text" placeholder="+353 87 123 4567" autocomplete="off" />
         </div>
 
         <div class="input-group">
           <label for="passport">Passport Number</label>
-          <input id="passport" name="passport" type="text" placeholder="Enter fake passport number" />
+          <input id="passport" name="passport" type="text" placeholder="Enter fake passport number" autocomplete="off" />
         </div>
 
         <div class="input-group">
@@ -614,7 +173,7 @@
           </div>
         </div>
 
-        <a class="payment-button" href="/downloads/payment_verification.docx" download="SkyBridge_Payment_Verification.docx" onclick="showDemoMessage()">
+        <a class="payment-button" href="confirmation.html" data-demo-message>
           Continue to Payment
         </a>
 
@@ -637,37 +196,10 @@
       Controlled demo environment for AI Browser Threat Monitoring System.
     </div>
     <div>
-      Internal lab target: 192.168.56.30/ticket.html
+      Internal lab target: 192.168.56.30
     </div>
   </footer>
+  <script src="js/main.js"></script>
 
-  <script>
-    const fareCards = document.querySelectorAll(".fare-card");
-    const selectedFare = document.getElementById("selectedFare");
-    const totalPrice = document.getElementById("totalPrice");
-
-    fareCards.forEach(card => {
-      card.addEventListener("click", () => {
-        fareCards.forEach(c => {
-          c.classList.remove("selected");
-          c.querySelector(".select-button").textContent = "Select";
-        });
-
-        card.classList.add("selected");
-        card.querySelector(".select-button").textContent = "Selected";
-
-        const fare = card.dataset.fare;
-        const price = parseInt(card.dataset.price, 10);
-        const total = price + 21;
-
-        selectedFare.textContent = fare;
-        totalPrice.textContent = "€" + total;
-      });
-    });
-
-    function showDemoMessage() {
-      document.getElementById("statusMessage").style.display = "block";
-    }
-  </script>
 </body>
 </html>
