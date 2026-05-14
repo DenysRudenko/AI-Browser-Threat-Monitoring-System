@@ -1,0 +1,242 @@
+<dashboard version="1.1" theme="dark">
+  <label>AI Browser Threat Monitoring Overview</label>
+  <row>
+    <panel>
+      <title>Telemetry Source Summary</title>
+      <chart>
+        <search>
+          <query>index=main earliest=-7d
+| stats count by sourcetype
+| sort - count</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="charting.axisTitleX.visibility">visible</option>
+        <option name="charting.axisTitleY.visibility">visible</option>
+        <option name="charting.axisTitleY2.visibility">visible</option>
+        <option name="charting.chart">bar</option>
+        <option name="charting.drilldown">all</option>
+        <option name="charting.legend.placement">right</option>
+      </chart>
+    </panel>
+    <panel>
+      <title>Evidence Source Distribution</title>
+      <chart>
+        <search>
+          <query>index=main earliest=-30d
+| eval EvidenceSource=case(
+    sourcetype="suricata:eve","Suricata network",
+    like(sourcetype,"%Sysmon%"),"Sysmon endpoint",
+    like(sourcetype,"velociraptor%"),"Velociraptor process",
+    true(),"Other"
+)
+| stats count by EvidenceSource
+| sort - count</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="charting.chart">column</option>
+        <option name="charting.drilldown">none</option>
+      </chart>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>SkyBridge Internal Web Traffic</title>
+      <table>
+        <search>
+          <query>
+            <![CDATA[
+index=main sourcetype="suricata:eve"
+(src_ip="192.168.56.20" OR dest_ip="192.168.56.20")
+(src_ip="192.168.56.30" OR dest_ip="192.168.56.30" OR "ticket.html" OR "confirmation.html" OR "email-booking-alert.html" OR "flights.html" OR "inbox.html" OR "index.html" OR "soc-demo.html" OR "SkyBridge" OR "eicar")
+| stats count latest(_time) as LastSeen by event_type src_ip dest_ip http.hostname http.url
+| convert ctime(LastSeen)
+| sort - count
+      ]]>
+          </query>
+          <earliest>-7d</earliest>
+          <latest>now</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="count">10</option>
+        <option name="dataOverlayMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="percentagesRow">false</option>
+        <option name="rowNumbers">false</option>
+        <option name="totalsRow">false</option>
+        <option name="wrap">true</option>
+      </table>
+    </panel>
+    <panel>
+      <title>Controlled Download and EICAR Evidence</title>
+      <table>
+        <search>
+          <query>
+            <![CDATA[
+index=main ("eicar" OR "EICAR" OR "/downloads/eicar.com" OR "downloads" OR "SkyBridge_Payment_Verification")
+| eval EvidenceSource=case(
+    sourcetype="suricata:eve","Suricata network",
+    like(sourcetype,"%Sysmon%"),"Sysmon endpoint",
+    like(sourcetype,"velociraptor%"),"Velociraptor process",
+    true(),"Other"
+)
+| stats count latest(_time) as LastSeen by EvidenceSource sourcetype host src_ip dest_ip http.url fileinfo.filename
+| convert ctime(LastSeen)
+| sort - LastSeen
+      ]]>
+          </query>
+          <earliest>-30d</earliest>
+          <latest>now</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="count">10</option>
+        <option name="dataOverlayMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="percentagesRow">false</option>
+        <option name="rowNumbers">false</option>
+        <option name="totalsRow">false</option>
+        <option name="wrap">true</option>
+      </table>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>AI Browser Process Activity</title>
+      <chart>
+        <search>
+          <query>
+            <![CDATA[
+index=main ("comet.exe" OR "Perplexity" OR "Opera Neon" OR "msedge.exe" OR "Copilot")
+(sourcetype="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" OR sourcetype="velociraptor:pslist" OR sourcetype="velociraptor:pstree")
+| eval Browser=case(
+    match(lower(_raw),"comet.exe|perplexity"),"Perplexity Comet",
+    match(lower(_raw),"opera neon"),"Opera Neon",
+    match(lower(_raw),"msedge.exe|copilot"),"Microsoft Edge/Copilot",
+    true(),"Other browser-related event"
+)
+| stats count by Browser
+| sort - count
+      ]]>
+          </query>
+          <earliest>-30d</earliest>
+          <latest>now</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="charting.chart">bar</option>
+        <option name="charting.legend.placement">right</option>
+        <option name="charting.axisTitleX.text">Event Count</option>
+        <option name="charting.axisTitleY.text">Browser</option>
+        <option name="charting.drilldown">none</option>
+      </chart>
+    </panel>
+    <panel>
+      <title>Suspicious Browser-Related Indicators</title>
+      <chart>
+        <search>
+          <query>
+            <![CDATA[
+index=main ("powershell.exe" OR "cmd.exe" OR "python.exe" OR "node.exe" OR "--headless" OR "selenium" OR "playwright" OR "puppeteer" OR "comet.exe" OR "Perplexity" OR "Opera Neon" OR "msedge.exe" OR "Copilot")
+| eval Indicator=case(
+    match(lower(_raw),"powershell.exe"),"PowerShell",
+    match(lower(_raw),"cmd.exe"),"CMD",
+    match(lower(_raw),"python.exe"),"Python",
+    match(lower(_raw),"node.exe"),"Node.js",
+    match(lower(_raw),"--headless"),"Headless browser flag",
+    match(lower(_raw),"selenium"),"Selenium",
+    match(lower(_raw),"playwright"),"Playwright",
+    match(lower(_raw),"puppeteer"),"Puppeteer",
+    match(lower(_raw),"comet.exe|perplexity"),"Perplexity Comet",
+    match(lower(_raw),"opera neon"),"Opera Neon",
+    match(lower(_raw),"msedge.exe|copilot"),"Microsoft Edge/Copilot",
+    true(),"Other browser-related indicator"
+)
+| stats count by Indicator
+| sort - count
+      ]]>
+          </query>
+          <earliest>-30d</earliest>
+          <latest>now</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="charting.chart">bar</option>
+        <option name="charting.legend.placement">right</option>
+        <option name="charting.axisTitleX.text">Event Count</option>
+        <option name="charting.axisTitleY.text">Indicator</option>
+        <option name="charting.drilldown">none</option>
+      </chart>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Velociraptor Process Evidence</title>
+      <table>
+        <search>
+          <query>
+            <![CDATA[
+index=main (sourcetype="velociraptor:pslist" OR sourcetype="velociraptor:pstree")
+| stats count latest(_time) as LastSeen by sourcetype host hostname Name Pid Ppid Username Exe
+| convert ctime(LastSeen)
+| sort - LastSeen
+| head 15
+      ]]>
+          </query>
+          <earliest>-30d</earliest>
+          <latest>now</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="count">10</option>
+        <option name="dataOverlayMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="percentagesRow">false</option>
+        <option name="rowNumbers">false</option>
+        <option name="totalsRow">false</option>
+        <option name="wrap">true</option>
+      </table>
+    </panel>
+    <panel>
+      <title>Correlation Timeline</title>
+      <table>
+        <search>
+          <query>
+            <![CDATA[
+index=main (
+    (sourcetype="suricata:eve" ("192.168.56.20" OR "192.168.56.30" OR "ticket.html" OR "confirmation.html" OR "email-booking-alert.html" OR "flights.html" OR "inbox.html" OR "index.html" OR "soc-demo.html" OR "/downloads/eicar.com" OR "eicar" OR "SkyBridge"))
+    OR
+    (sourcetype="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" ("comet.exe" OR "Perplexity" OR "Opera Neon" OR "msedge.exe" OR "Copilot" OR "eicar"))
+    OR
+    (sourcetype="velociraptor:pslist" OR sourcetype="velociraptor:pstree")
+)
+| eval EvidenceSource=case(
+    sourcetype="suricata:eve","Suricata network",
+    like(sourcetype,"%Sysmon%"),"Sysmon endpoint",
+    like(sourcetype,"velociraptor%"),"Velociraptor process",
+    true(),"Other"
+)
+| rex field=_raw "<Data Name=[\"']Image[\"']>(?<Image>[^<]+)</Data>"
+| rex field=_raw "<Data Name=[\"']ParentImage[\"']>(?<ParentImage>[^<]+)</Data>"
+| rex field=_raw "<Data Name=[\"']CommandLine[\"']>(?<CommandLine>[^<]+)</Data>"
+| sort 0 - _time
+| streamstats count as SourceRow by EvidenceSource
+| where SourceRow<=10
+| table _time EvidenceSource sourcetype host hostname src_ip dest_ip http.url event_type Name Image ParentImage CommandLine Exe
+| sort EvidenceSource - _time
+      ]]>
+          </query>
+          <earliest>-30d</earliest>
+          <latest>now</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="count">10</option>
+        <option name="dataOverlayMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="percentagesRow">false</option>
+        <option name="rowNumbers">false</option>
+        <option name="totalsRow">false</option>
+        <option name="wrap">true</option>
+      </table>
+    </panel>
+  </row>
+</dashboard>

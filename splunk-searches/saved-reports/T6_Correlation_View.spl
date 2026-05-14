@@ -1,0 +1,51 @@
+index=main sourcetype="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational"
+("msedge.exe" OR "--headless" OR "powershell.exe" OR "cmd.exe" OR "python.exe" OR "node.exe" OR "Invoke-WebRequest")
+NOT "SplunkUniversalForwarder"
+NOT "splunk-powershell.exe"
+| rex field=_raw "<EventID[^>]*>(?<EventCode>\d+)</EventID>"
+| rex field=_raw "<Computer>(?<Computer>[^<]+)</Computer>"
+| rex field=_raw "<Data Name=['\"]Image['\"]>(?<Image>[^<]*)</Data>"
+| rex field=_raw "<Data Name=['\"]ParentImage['\"]>(?<ParentImage>[^<]*)</Data>"
+| rex field=_raw "<Data Name=['\"]CommandLine['\"]>(?<CommandLine>[^<]*)</Data>"
+| rex field=_raw "<Data Name=['\"]ParentCommandLine['\"]>(?<ParentCommandLine>[^<]*)</Data>"
+| rex field=_raw "<Data Name=['\"]User['\"]>(?<User>[^<]*)</Data>"
+| eval EvidenceSource="Sysmon Endpoint Process"
+| eval Hostname=coalesce(Computer, host)
+| eval ProcessName=Image
+| eval Command=CommandLine
+| eval NetworkSummary=""
+| fields _time EvidenceSource Hostname sourcetype EventCode ProcessName ParentImage Command ParentCommandLine User src_ip dest_ip dest_port proto event_type http_hostname http_url user_agent Pid Ppid Exe NetworkSummary
+
+| append [
+    search index=main sourcetype="suricata:eve" src_ip="192.168.56.20" dest_ip="192.168.56.30"
+    | spath
+    | rename http.hostname AS http_hostname http.url AS http_url http.http_user_agent AS user_agent
+    | eval EvidenceSource="Suricata Network Traffic"
+    | eval Hostname=host
+    | eval EventCode=""
+    | eval ProcessName=""
+    | eval ParentImage=""
+    | eval Command=""
+    | eval ParentCommandLine=""
+    | eval User=""
+    | eval NetworkSummary=src_ip." -> ".dest_ip.":".dest_port." ".event_type." ".http_url
+    | fields _time EvidenceSource Hostname sourcetype EventCode ProcessName ParentImage Command ParentCommandLine User src_ip dest_ip dest_port proto event_type http_hostname http_url user_agent Pid Ppid Exe NetworkSummary
+]
+
+| append [
+    search index=main sourcetype="velociraptor:pstree" hostname="win-endpoint"
+    (Name="msedge.exe" OR Name="powershell.exe" OR Name="cmd.exe" OR Name="python.exe" OR Name="node.exe")
+    | eval EvidenceSource="Velociraptor Process Tree"
+    | eval Hostname=hostname
+    | eval EventCode=""
+    | eval ProcessName=Name
+    | eval ParentImage=""
+    | eval Command=CommandLine
+    | eval ParentCommandLine=""
+    | eval User=Username
+    | eval NetworkSummary=""
+    | fields _time EvidenceSource Hostname sourcetype EventCode ProcessName ParentImage Command ParentCommandLine User src_ip dest_ip dest_port proto event_type http_hostname http_url user_agent Pid Ppid Exe NetworkSummary
+]
+
+| table _time EvidenceSource Hostname sourcetype EventCode ProcessName ParentImage Command User src_ip dest_ip dest_port proto event_type http_hostname http_url user_agent Pid Ppid Exe NetworkSummary
+| sort -_time

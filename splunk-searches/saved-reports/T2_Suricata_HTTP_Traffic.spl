@@ -1,0 +1,5 @@
+index=main sourcetype="suricata:eve"
+| spath
+| search event_type="http" src_ip="192.168.56.20" dest_ip="192.168.56.30"
+| table _time event_type src_ip src_port dest_ip dest_port proto http.hostname http.url http.http_user_agent
+| sort - _time

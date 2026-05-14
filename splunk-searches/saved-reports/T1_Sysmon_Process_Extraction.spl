@@ -1,0 +1,11 @@
+index=main sourcetype="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" ("notepad.exe" OR "whoami.exe" OR "hostname.exe")
+| rex field=_raw "<EventID[^>]*>(?<EventCode>\d+)</EventID>"
+| rex field=_raw "<Computer>(?<Computer>[^<]+)</Computer>"
+| rex field=_raw "<Data Name=['\"]Image['\"]>(?<Image>[^<]*)</Data>"
+| rex field=_raw "<Data Name=['\"]ParentImage['\"]>(?<ParentImage>[^<]*)</Data>"
+| rex field=_raw "<Data Name=['\"]CommandLine['\"]>(?<CommandLine>[^<]*)</Data>"
+| rex field=_raw "<Data Name=['\"]ParentCommandLine['\"]>(?<ParentCommandLine>[^<]*)</Data>"
+| rex field=_raw "<Data Name=['\"]User['\"]>(?<User>[^<]*)</Data>"
+| search EventCode=1
+| table _time Computer EventCode Image ParentImage CommandLine ParentCommandLine User
+| sort - _time

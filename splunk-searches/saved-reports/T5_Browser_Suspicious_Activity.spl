@@ -1,0 +1,55 @@
+index=main
+(
+    "--headless" OR "msedge.exe" OR "chrome.exe" OR
+    "comet.exe" OR "Comet" OR "Perplexity" OR "perplexity.ai" OR
+    "opera.exe" OR "Opera Neon" OR "Opera Software" OR "neon" OR
+    "powershell.exe" OR "cmd.exe" OR "python.exe" OR "node.exe" OR
+    "Invoke-WebRequest" OR "puppeteer" OR "playwright" OR "selenium" OR
+    "SkyBridge" OR "192.168.56.30" OR "denysrudenko.github.io" OR
+    "/index.html" OR "/flights.html" OR "/ticket.html" OR "/inbox.html" OR "/email-booking-alert.html" OR "/soc-demo.html" OR "/downloads/eicar.com"
+)
+NOT "SplunkUniversalForwarder"
+NOT "splunk-powershell.exe"
+| eval EvidenceSource=case(
+    sourcetype=="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational","Sysmon",
+    sourcetype=="velociraptor:pslist","Velociraptor Pslist",
+    sourcetype=="velociraptor:pstree","Velociraptor Pstree",
+    sourcetype=="suricata:eve","Suricata",
+    true(),"Other"
+)
+| rex field=_raw "<EventID[^>]*>(?<EventCode>\d+)</EventID>"
+| rex field=_raw "<Computer>(?<Computer>[^<]+)</Computer>"
+| rex field=_raw "<Data Name=['\"]Image['\"]>(?<Image>[^<]*)</Data>"
+| rex field=_raw "<Data Name=['\"]Description['\"]>(?<Description>[^<]*)</Data>"
+| rex field=_raw "<Data Name=['\"]Product['\"]>(?<Product>[^<]*)</Data>"
+| rex field=_raw "<Data Name=['\"]Company['\"]>(?<Company>[^<]*)</Data>"
+| rex field=_raw "<Data Name=['\"]ParentImage['\"]>(?<ParentImage>[^<]*)</Data>"
+| rex field=_raw "<Data Name=['\"]CommandLine['\"]>(?<CommandLine>[^<]*)</Data>"
+| rex field=_raw "<Data Name=['\"]ParentCommandLine['\"]>(?<ParentCommandLine>[^<]*)</Data>"
+| rex field=_raw "<Data Name=['\"]User['\"]>(?<User>[^<]*)</Data>"
+| eval ProcessName=coalesce(Name, Image, "")
+| eval Hostname=coalesce(hostname, Computer, host)
+| eval Command=coalesce(CommandLine, "")
+| eval Product=coalesce(Product, "")
+| eval Description=coalesce(Description, "")
+| eval WebPath=coalesce('http.url', http_url, url, "")
+| eval WebHost=coalesce('http.hostname', http_hostname, "")
+| eval UserAgent=coalesce('http.http_user_agent', http_user_agent, "")
+| eval BrowserOrIndicator=case(
+    EvidenceSource!="Suricata" AND (like(lower(ProcessName), "%comet%") OR like(lower(Command), "%comet%") OR like(lower(Command), "%perplexity%")), "Comet AI Browser",
+    EvidenceSource!="Suricata" AND (like(lower(ProcessName), "%opera%") OR like(lower(Command), "%opera%") OR like(lower(Command), "%neon%") OR like(lower(Product), "%opera neon%") OR like(lower(Description), "%opera neon%")), "Opera Neon",
+    EvidenceSource!="Suricata" AND (like(lower(ProcessName), "%msedge.exe%") OR like(lower(Command), "%msedge.exe%")), "Microsoft Edge",
+    EvidenceSource!="Suricata" AND (like(lower(ProcessName), "%chrome.exe%") OR like(lower(Command), "%chrome.exe%")), "Google Chrome",
+    EvidenceSource!="Suricata" AND like(lower(Command), "%--headless%"), "Headless Browser Indicator",
+    EvidenceSource!="Suricata" AND (like(lower(Command), "%puppeteer%") OR like(lower(Command), "%playwright%") OR like(lower(Command), "%selenium%")), "Browser Automation Indicator",
+    EvidenceSource!="Suricata" AND (like(lower(ProcessName), "%powershell.exe%") OR like(lower(Command), "%invoke-webrequest%")), "PowerShell Indicator",
+    EvidenceSource!="Suricata" AND like(lower(ProcessName), "%cmd.exe%"), "Command Prompt Indicator",
+    EvidenceSource!="Suricata" AND like(lower(ProcessName), "%python.exe%"), "Python Indicator",
+    EvidenceSource!="Suricata" AND like(lower(ProcessName), "%node.exe%"), "Node.js Indicator",
+    EvidenceSource=="Suricata" AND (like(lower(_raw), "%192.168.56.30%") OR like(lower(_raw), "%/index.html%") OR like(lower(_raw), "%/flights.html%") OR like(lower(_raw), "%/ticket.html%") OR like(lower(_raw), "%/inbox.html%") OR like(lower(_raw), "%/email-booking-alert.html%") OR like(lower(_raw), "%/soc-demo.html%") OR like(lower(_raw), "%/downloads/eicar.com%")), "SkyBridge Web Traffic",
+    like(lower(_raw), "%denysrudenko.github.io%"), "GitHub Pages Browser Workflow",
+    true(), "Other Indicator"
+)
+| search BrowserOrIndicator!="Other Indicator"
+| table _time EvidenceSource BrowserOrIndicator Hostname sourcetype EventCode ProcessName Image Description Product Company ParentImage Command User Username Pid Ppid Exe src_ip dest_ip proto WebHost WebPath UserAgent
+| sort - _time

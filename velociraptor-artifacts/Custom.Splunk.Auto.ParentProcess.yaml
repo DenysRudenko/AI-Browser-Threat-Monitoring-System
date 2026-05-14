@@ -1,0 +1,51 @@
+name: Custom.Splunk.Auto.ParentProcess
+description: |
+  Automatically upload Windows.Attack.ParentProcess results to Splunk.
+
+  This server event artifact watches for completed Velociraptor collections
+  containing Windows.Attack.ParentProcess results and forwards them to Splunk HEC.
+
+type: SERVER_EVENT
+
+parameters:
+  - name: SplunkURL
+    type: string
+    default: http://192.168.56.10:8088/services/collector
+    description: Splunk HEC collector URL.
+
+  - name: Token
+    type: string
+    default: <SPLUNK_HEC_TOKEN>
+    description: Splunk HEC token. Replace before use. Do not commit real tokens.
+
+sources:
+  - query: |
+      LET completions = SELECT *
+      FROM watch_monitoring(artifact="System.Flow.Completion")
+      WHERE Flow.artifacts_with_results =~ "Windows.Attack.ParentProcess"
+
+      SELECT *
+      FROM foreach(
+        row=completions,
+        query={
+          SELECT *
+          FROM splunk_upload(
+            query={
+              SELECT *,
+                     client_info(client_id=ClientId).os_info.hostname AS hostname,
+                     timestamp(epoch=now()) AS timestamp
+              FROM source(
+                client_id=ClientId,
+                flow_id=Flow.session_id,
+                artifact="Windows.Attack.ParentProcess"
+              )
+            },
+            url=SplunkURL,
+            index="main",
+            sourcetype="velociraptor:parentprocess",
+            skip_verify=True,
+            wait_time=5,
+            token=Token
+          )
+        }
+      )
